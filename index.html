@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA générative en classe : Bloom + SAMR au service des apprentissages</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Bloom colors */
+            --bloom-purple: #9B7BB8;
+            --bloom-red: #E85A5A;
+            --bloom-orange: #F5A853;
+            --bloom-yellow: #F7DC6F;
+            --bloom-green: #6ABF69;
+            --bloom-blue: #5DADE2;
+            /* SAMR colors */
+            --samr-substitution: #5DADE2;
+            --samr-augmentation: #58D68D;
+            --samr-modification: #F5B041;
+            --samr-redefinition: #AF7AC5;
+            /* IA specific */
+            --ia-gradient-start: #667eea;
+            --ia-gradient-end: #764ba2;
+            /* Common */
+            --bg-cream: #F8F6F1;
+            --text-dark: #2C3E50;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+            --alert-red: #e74c3c;
+            --success-green: #27ae60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 2.5rem 2rem;
+            background: linear-gradient(135deg, #fff 0%, #f0ebe3 100%);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, 
+                var(--ia-gradient-start), var(--ia-gradient-end), 
+                var(--bloom-orange), var(--samr-redefinition));
+        }
+
+        .title-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .title-ia {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px;
+            color: white;
+            background: linear-gradient(135deg, var(--ia-gradient-start), var(--ia-gradient-end));
+            animation: popIn 0.5s ease-out backwards;
+            animation-delay: 0.1s;
+        }
+
+        .title-text {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            animation: popIn 0.5s ease-out backwards;
+            animation-delay: 0.2s;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        /* Research Box Styling */
+        .research-box {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-left: 5px solid var(--ia-gradient-end);
+            border-radius: 12px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .research-box h2 {
+            font-family: 'Quicksand', sans-serif;
+            color: var(--text-dark);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .research-box p {
+            font-size: 0.95rem;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 1.2rem;
+            border-radius: 10px;
+            border: 1px solid #e1e4e8;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--bloom-purple);
+        }
+
+        .stat-value {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--ia-gradient-end);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-desc {
+            font-size: 0.85rem;
+            color: #444;
+            line-height: 1.4;
+            margin-bottom: 0.8rem;
+        }
+
+        .stat-source {
+            font-size: 0.7rem;
+            color: #888;
+            font-style: italic;
+            border-top: 1px solid #eee;
+            padding-top: 0.5rem;
+            margin-top: auto;
+        }
+
+        /* Cadre réglementaire box */
+        .cadre-box {
+            background: linear-gradient(135deg, #e8f4f8, #fff);
+            border: 2px solid var(--bloom-blue);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .cadre-box.role-enseignant {
+            background: linear-gradient(135deg, #f4e8f8, #fff);
+            border-color: var(--bloom-purple);
+        }
+
+        .cadre-box h2 {
+            font-family: 'Quicksand', sans-serif;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cadre-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .cadre-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .cadre-item .cadre-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .cadre-item h3 {
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .cadre-item p {
+            font-size: 0.8rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .tile {
+            margin-bottom: 1rem;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .tile-header {
+            padding: 1.2rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .tile-header:hover {
+            filter: brightness(1.05);
+        }
+
+        .tile-header .icon {
+            font-size: 1.5rem;
+            margin-right: 0.8rem;
+        }
+
+        .tile-header .title-group {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .tile-header .arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .tile.open .tile-header .arrow {
+            transform: rotate(180deg);
+        }
+
+        .tile-content {
+            background: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .tile.open .tile-content {
+            max-height: 8000px;
+        }
+
+        .tile-content-inner {
+            padding: 1.5rem;
+        }
+
+        /* Tile colors */
+        .tile-principe .tile-header { background: linear-gradient(135deg, #2C3E50, #34495e); }
+        .tile-memoriser .tile-header { background: linear-gradient(135deg, var(--bloom-blue), #3498db); }
+        .tile-comprendre .tile-header { background: linear-gradient(135deg, var(--bloom-green), #27ae60); }
+        .tile-appliquer .tile-header { background: linear-gradient(135deg, #c9a227, #d4ac2b); }
+        .tile-analyser .tile-header { background: linear-gradient(135deg, var(--bloom-orange), #e67e22); }
+        .tile-evaluer .tile-header { background: linear-gradient(135deg, var(--bloom-red), #c0392b); }
+        .tile-creer .tile-header { background: linear-gradient(135deg, var(--bloom-purple), #8e44ad); }
+        .tile-outils .tile-header { background: linear-gradient(135deg, var(--ia-gradient-start), var(--ia-gradient-end)); }
+        .tile-erreurs .tile-header { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+
+        h3 {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.15rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        p {
+            margin-bottom: 0.8rem;
+            color: #555;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #fff3cd 0%, #fff3cd 100%);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .highlight-green {
+            background: linear-gradient(120deg, #d4edda 0%, #d4edda 100%);
+            color: #155724;
+        }
+
+        .highlight-red {
+            background: linear-gradient(120deg, #f8d7da 0%, #f8d7da 100%);
+            color: #721c24;
+        }
+
+        /* Usage scenario boxes */
+        .usage-box {
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--bloom-purple);
+        }
+
+        .usage-box.substitution { border-left-color: var(--samr-substitution); }
+        .usage-box.augmentation { border-left-color: var(--samr-augmentation); }
+        .usage-box.modification { border-left-color: var(--samr-modification); }
+        .usage-box.redefinition { border-left-color: var(--samr-redefinition); }
+
+        .usage-box h4 {
+            font-family: 'Quicksand', sans-serif;
+            color: var(--text-dark);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .usage-box .niveau {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            background: var(--bloom-blue);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .usage-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .usage-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            padding: 0.6rem;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--ia-gradient-start);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .step-content {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        /* Badge SAMR */
+        .badge-samr {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: white;
+            margin-left: 0.5rem;
+        }
+
+        .badge-samr.s { background: var(--samr-substitution); }
+        .badge-samr.a { background: var(--samr-augmentation); }
+        .badge-samr.m { background: var(--samr-modification); }
+        .badge-samr.r { background: var(--samr-redefinition); }
+
+        /* Plus-value box */
+        .plusvalue-box {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .plusvalue-box h5 {
+            color: #155724;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .plusvalue-box p {
+            color: #155724;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        /* Comparison boxes */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 600px) {
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-box {
+            padding: 1rem;
+            border-radius: 12px;
+            border: 2px solid;
+        }
+
+        .comparison-bad {
+            background: linear-gradient(135deg, #fff8e6, #fff);
+            border-color: var(--bloom-orange);
+        }
+
+        .comparison-good {
+            background: linear-gradient(135deg, #f0fdf4, #fff);
+            border-color: var(--success-green);
+        }
+
+        .comparison-box h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .comparison-bad h4 { color: #856404; }
+        .comparison-good h4 { color: var(--success-green); }
+
+        .comparison-box p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Key principle box */
+        .key-principle {
+            background: linear-gradient(135deg, #2C3E50, #34495e);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .key-principle .principle-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .key-principle h3 {
+            color: white;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .key-principle p {
+            color: rgba(255,255,255,0.9);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        /* Tool list */
+        .tool-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--ia-gradient-start);
+        }
+
+        .tool-card h4 {
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tool-card .tool-badge {
+            font-size: 0.65rem;
+            padding: 0.15rem 0.4rem;
+            background: var(--success-green);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .tool-card p {
+            font-size: 0.85rem;
+            color: #666;
+            margin: 0;
+        }
+
+        /* Warning box */
+        .warning-box {
+            background: linear-gradient(135deg, #fff3cd, #fff);
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+        }
+
+        .warning-box .warning-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .warning-box p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #856404;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .checklist li {
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+        }
+
+        .checklist .check-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        /* Source reference */
+        .source-ref {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .source-ref a {
+            color: var(--ia-gradient-start);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .source-ref a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+
+        .footer-main {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-credit {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: linear-gradient(135deg, #2C3E50, #34495e);
+            color: #fff;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .footer-credit .ai-badge {
+            background: linear-gradient(135deg, var(--ia-gradient-start), var(--ia-gradient-end));
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+        }
+
+        @media (max-width: 600px) {
+            .title-ia { font-size: 1.6rem; }
+            .title-text { font-size: 1.3rem; }
+            .container { padding: 1rem; }
+            .tile-header { padding: 1rem; font-size: 1rem; }
+            .tile-content-inner { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="title-wrapper">
+                <span class="title-ia">IA générative</span>
+                <span class="title-text">en classe</span>
+            </div>
+            <p class="subtitle">
+                🎯 Bloom + SAMR pour des usages qui font vraiment apprendre
+            </p>
+        </header>
+
+        <div class="research-box">
+            <h2><span class="icon">🔬</span> Ce que nous dit la recherche : L'urgence d'une éducation à l'IA</h2>
+            <p>L'externalisation des fonctions mentales vers l'IA (le <em>cognitive offloading</em>) menace directement l'apprentissage si elle n'est pas encadrée. En France, <strong>l'usage massif et souvent non régulé par les jeunes (86% des étudiants, 90% des lycéens)</strong> appelle une reprise en main par l'institution scolaire pour éviter une véritable atrophie cognitive.</p>
+            
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-value">90%</div>
+                    <div class="stat-desc">des lycéens (16-18 ans) en France utilisent régulièrement l'IA générative pour s'aider à faire leurs devoirs.</div>
+                    <div class="stat-source">Source : Enquête GoStudent / Kantar, 2024</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">83%</div>
+                    <div class="stat-desc">des étudiants épaulés par l'IA ne parviennent pas à se souvenir d'un texte qu'ils viennent pourtant de co-rédiger (amnésie numérique).</div>
+                    <div class="stat-source">Source : M. Gerlich, Étude Societies, 2025</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">- 32%</div>
+                    <div class="stat-desc">de "charge cognitive pertinente" mobilisée lors de la rédaction assistée par ChatGPT par rapport à une tâche autonome.</div>
+                    <div class="stat-source">Source : M. Gerlich, Étude Societies, 2025</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">- 0,49</div>
+                    <div class="stat-desc">Coefficient de corrélation (Pearson) : lien fort et négatif entre l'usage intensif de l'IA et la capacité à exercer son esprit critique.</div>
+                    <div class="stat-source">Source : M. Gerlich, Étude Societies, 2025</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">Baisse</div>
+                    <div class="stat-desc">La connectivité cérébrale (mesurée par EEG) diminue de manière proportionnelle au niveau d'assistance fourni par l'outil IA.</div>
+                    <div class="stat-source">Source : Étude N. Kosmyna, MIT Media Lab, 2025</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">80%</div>
+                    <div class="stat-desc">des enseignants français déclarent n'avoir reçu aucune formation à l'IA, limitant de fait leur capacité à l'encadrer.</div>
+                    <div class="stat-source">Source : Rapport Cnesco (Projet AI4T), 2024</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cadre-box role-enseignant">
+            <h2>🗣️ Le rôle crucial de l'enseignant : Cadrer et annoncer l'usage</h2>
+            <p style="margin-bottom: 1rem;">Face à ces enjeux, l'UNESCO a publié ses <em>Orientations pour l'intelligence artificielle générative dans l'éducation et la recherche</em> (2024), rappelant qu'il faut <strong>« garantir que l'IA générative serve avant tout à renforcer les capacités humaines plutôt qu'à s'y substituer »</strong>. De même, le projet d'évaluation européen AI4T, piloté par le Cnesco auprès de 1 005 enseignants, recommande d'<strong>« offrir des opportunités de formation à l'IA aux enseignants »</strong> et de <strong>« garantir un cadre éthique »</strong>.</p>
+            <p style="margin-bottom: 1rem;">L'élève ne peut pas deviner seul ce qui est permis. <strong>C'est à l'enseignant de définir et d'annoncer explicitement le cadre avant chaque activité :</strong></p>
+            <div class="cadre-grid">
+                <div class="cadre-item">
+                    <div class="cadre-icon">🚫</div>
+                    <h3>1. Interdiction</h3>
+                    <p><strong>"On ne peut pas utiliser l'IA ici."</strong> Évaluation, réflexion initiale, ancrage mémoriel. L'effort doit être 100% humain.</p>
+                </div>
+                <div class="cadre-item">
+                    <div class="cadre-icon">🤝</div>
+                    <h3>2. Assistance</h3>
+                    <p><strong>"On peut être assisté."</strong> L'IA aide à comprendre un concept, reformuler une consigne ou joue le rôle de tuteur socratique.</p>
+                </div>
+                <div class="cadre-item">
+                    <div class="cadre-icon">🏗️</div>
+                    <h3>3. Génération & Critique</h3>
+                    <p><strong>"On peut générer."</strong> L'IA produit un premier jet que l'élève a pour obligation d'analyser, de corriger et de s'approprier.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cadre-box">
+            <h2>📋 Rappel sur les PRINCIPES FORTS du cadre d'usage</h2>
+            <div class="cadre-grid">
+                <div class="cadre-item">
+                    <div class="cadre-icon">🔒</div>
+                    <h3>Pas de compte élève</h3>
+                    <p>Interdiction de demander aux élèves de créer un compte sur des IA grand public</p>
+                </div>
+                <div class="cadre-item">
+                    <div class="cadre-icon">📊</div>
+                    <h3>Pas de données personnelles</h3>
+                    <p>Ne saisir que des données pouvant être rendues publiques</p>
+                </div>
+                <div class="cadre-item">
+                    <div class="cadre-icon">🎓</div>
+                    <h3>À partir de la 4e</h3>
+                    <p>Usage autonome encadré au collège, plus libre au lycée</p>
+                </div>
+                <div class="cadre-item">
+                    <div class="cadre-icon">🌱</div>
+                    <h3>Usage frugal</h3>
+                    <p>Privilégier les solutions moins coûteuses écologiquement</p>
+                </div>
+                <div class="cadre-item">
+                    <div class="cadre-icon">👁️</div>
+                    <h3>Validation humaine</h3>
+                    <p>L'exactitude des contenus générés doit systématiquement être vérifiée par l'élève</p>
+                </div>
+                <div class="cadre-item">
+                    <div class="cadre-icon">📢</div>
+                    <h3>Transparence totale</h3>
+                    <p>Tout usage de l'IA pour un rendu doit être explicitement déclaré et justifié</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tile tile-principe open">
+            <div class="tile-header" onclick="toggleTile(this)">
+                <div class="title-group">
+                    <span class="icon">🧭</span>
+                    <span>Le principe : l'IA au bon niveau cognitif</span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="tile-content">
+                <div class="tile-content-inner">
+                    <p>Comme pour tout outil numérique, l'IA générative n'a de sens pédagogique que si elle apporte une <strong>plus-value à l'apprentissage</strong>. Mais l'IA pose un défi particulier : elle peut <strong>court-circuiter l'effort cognitif</strong> de l'élève si elle est mal utilisée.</p>
+
+                    <div class="key-principle">
+                        <div class="principle-icon">⚠️</div>
+                        <h3>Le piège de l'IA : faire À LA PLACE de l'élève</h3>
+                        <p>Si l'IA fait le travail cognitif, l'élève n'apprend pas.<br>L'IA doit être un <strong>outil de l'élève</strong>, pas un <strong>substitut à son effort</strong>.</p>
+                    </div>
+
+                    <h3>La règle d'or : croiser Bloom et SAMR</h3>
+                    <p><strong>Question 1 (Bloom) :</strong> Quelle habileté cognitive je veux que l'élève développe ?</p>
+                    <p><strong>Question 2 (SAMR) :</strong> L'IA améliore-t-elle ou transforme-t-elle cette tâche cognitive ?</p>
+                    <p><strong>Question 3 (Plus-value) :</strong> Est-ce que l'élève travaille PLUS ou MOINS cognitivement avec l'IA ?</p>
+
+                    <div class="comparison-container">
+                        <div class="comparison-box comparison-bad">
+                            <h4>⚡ Réflexe habituel</h4>
+                            <p>« Demande à ChatGPT de t'écrire une introduction sur le sujet. »</p>
+                            <p><em>→ L'IA fait le travail cognitif. L'élève ne construit rien.</em></p>
+                        </div>
+                        <div class="comparison-box comparison-good">
+                            <h4>💡 Réflexe à privilégier</h4>
+                            <p>« Écris ton introduction, puis demande à l'IA de la critiquer. Améliore-la en tenant compte des retours. »</p>
+                            <p><em>→ L'élève fait le travail cognitif. L'IA l'aide à progresser.</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tile tile-memoriser">
+            <div class="tile-header" onclick="toggleTile(this)">
+                <div class="title-group">
+                    <span class="icon">🧠</span>
+                    <span>Mémoriser : l'IA pour créer des outils de révision</span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="tile-content">
+                <div class="tile-content-inner">
+                    <p><strong>Niveau Bloom :</strong> Mémoriser — Rappeler des faits, des termes, des concepts de base.</p>
+                    
+                    <div class="warning-box">
+                        <span class="warning-icon">⚠️</span>
+                        <p><strong>Attention :</strong> L'IA ne doit pas donner les réponses, mais aider l'élève à s'auto-interroger.</p>
+                    </div>
+
+                    <div class="usage-box augmentation">
+                        <h4>📚 Créer ses propres flashcards <span class="badge-samr a">SAMR : Augmentation</span></h4>
+                        <span class="niveau">Collège / Lycée</span>
+                        <div class="usage-steps">
+                            <div class="usage-step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">L'élève identifie les notions clés de son cours (travail cognitif de sélection)</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">Il demande à l'IA de générer des questions à partir de ces notions</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">3</span>
+                                <span class="step-content">Il vérifie et corrige les questions générées (esprit critique)</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">4</span>
+                                <span class="step-content">Il utilise ces flashcards pour réviser</span>
+                            </div>
+                        </div>
+                        <div class="plusvalue-box">
+                            <h5>✨ Plus-value pédagogique</h5>
+                            <p>L'élève ne reçoit pas passivement des flashcards toutes faites : il sélectionne, vérifie, corrige. Le travail cognitif reste chez l'élève.</p>
+                        </div>
+                    </div>
+
+                    <div class="usage-box augmentation">
+                        <h4>🎯 Quiz personnalisé adaptatif <span class="badge-samr a">SAMR : Augmentation</span></h4>
+                        <span class="niveau">4e et +</span>
+                        <div class="usage-steps">
+                            <div class="usage-step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">L'élève indique à l'IA le thème et son niveau de difficulté souhaité</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">L'IA génère 5 questions avec correction immédiate</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">3</span>
+                                <span class="step-content">En fonction des erreurs, l'élève demande des questions plus ciblées</span>
+                            </div>
+                        </div>
+                        <div class="plusvalue-box">
+                            <h5>✨ Plus-value pédagogique</h5>
+                            <p>Feedback immédiat et personnalisé impossible sans IA. L'élève pilote son apprentissage.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tile tile-comprendre">
+            <div class="tile-header" onclick="toggleTile(this)">
+                <div class="title-group">
+                    <span class="icon">💡</span>
+                    <span>Comprendre : l'IA comme tuteur patient</span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="tile-content">
+                <div class="tile-content-inner">
+                    <p><strong>Niveau Bloom :</strong> Comprendre — Expliquer des idées, interpréter, résumer.</p>
+
+                    <div class="warning-box">
+                        <span class="warning-icon">⚠️</span>
+                        <p><strong>Attention :</strong> L'IA peut « halluciner » (inventer des informations fausses). Toujours croiser avec des sources fiables.</p>
+                    </div>
+
+                    <div class="usage-box augmentation">
+                        <h4>🔄 Reformulation adaptée <span class="badge-samr a">SAMR : Augmentation</span></h4>
+                        <span class="niveau">Collège / Lycée</span>
+                        <div class="usage-steps">
+                            <div class="usage-step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">L'élève lit une définition ou un concept qu'il ne comprend pas</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">Il demande à l'IA : « Explique-moi [concept] comme si j'avais 10 ans / avec un exemple du quotidien »</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">3</span>
+                                <span class="step-content">Il reformule ensuite avec ses propres mots pour vérifier sa compréhension</span>
+                            </div>
+                        </div>
+                        <div class="plusvalue-box">
+                            <h5>✨ Plus-value pédagogique</h5>
+                            <p>Tuteur disponible 24/7, patient, qui peut reformuler à l'infini. Mais l'élève doit ensuite produire SA reformulation.</p>
+                        </div>
+                    </div>
+
+                    <div class="usage-box modification">
+                        <h4>❓ Dialogue socratique <span class="badge-samr m">SAMR : Modification</span></h4>
+                        <span class="niveau">Lycée</span>
+                        <div class="usage-steps">
+                            <div class="usage-step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">L'élève expose sa compréhension d'un texte ou d'un concept</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">L'IA pose des questions pour approfondir : « Pourquoi dis-tu cela ? », « Qu'est-ce que tu entends par... ? »</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">3</span>
+                                <span class="step-content">L'élève affine progressivement sa pensée par le dialogue</span>
+                            </div>
+                        </div>
+                        <div class="plusvalue-box">
+                            <h5>✨ Plus-value pédagogique</h5>
+                            <p>Interaction impossible en classe (temps, nombre d'élèves). L'IA questionne sans juger, l'élève construit sa réflexion.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tile tile-appliquer">
+            <div class="tile-header" onclick="toggleTile(this)">
+                <div class="title-group">
+                    <span class="icon">🔧</span>
+                    <span>Appliquer : l'IA pour s'entraîner avec feedback</span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="tile-content">
+                <div class="tile-content-inner">
+                    <p><strong>Niveau Bloom :</strong> Appliquer — Utiliser des procédures dans des situations nouvelles.</p>
+
+                    <div class="usage-box augmentation">
+                        <h4>📝 Exercices à la demande avec correction <span class="badge-samr a">SAMR : Augmentation</span></h4>
+                        <span class="niveau">4e et +</span>
+                        <div class="usage-steps">
+                            <div class="usage-step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">L'élève demande un exercice sur une notion précise</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">Il résout l'exercice SUR PAPIER (pas dans l'IA !)</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">3</span>
+                                <span class="step-content">Il soumet sa réponse à l'IA pour correction et explication des erreurs</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">4</span>
+                                <span class="step-content">Il demande un exercice similaire pour vérifier qu'il a compris</span>
+                            </div>
+                        </div>
+                        <div class="plusvalue-box">
+                            <h5>✨ Plus-value pédagogique</h5>
+                            <p>Exercices infinis et personnalisés avec feedback immédiat. Impossible à produire manuellement par l'enseignant pour 30 élèves.</p>
+                        </div>
+                    </div>
+
+                    <div class="usage-box modification">
+                        <h4>💬 Simulation de scénario <span class="badge-samr m">SAMR : Modification</span></h4>
+                        <span class="niveau">4e et +</span>
+                        <div class="usage-steps">
+                            <div class="usage-step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">L'enseignant définit un scénario d'application contextuel</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">L'élève dialogue avec l'IA pour résoudre un problème ou franchir des étapes</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">3</span>
+                                <span class="step-content">L'IA corrige les erreurs et propose des formulations ou méthodes alternatives</span>
+                            </div>
+                        </div>
+                        <div class="plusvalue-box">
+                            <h5>✨ Plus-value pédagogique</h5>
+                            <p>Pratique authentique sans le stress du regard des pairs. Interlocuteur patient et disponible.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tile tile-analyser">
+            <div class="tile-header" onclick="toggleTile(this)">
+                <div class="title-group">
+                    <span class="icon">🔍</span>
+                    <span>Analyser : l'IA comme miroir critique</span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="tile-content">
+                <div class="tile-content-inner">
+                    <p><strong>Niveau Bloom :</strong> Analyser — Décomposer, comparer, identifier des structures et des relations.</p>
+
+                    <div class="usage-box modification">
+                        <h4>🔬 Analyse comparative des réponses IA <span class="badge-samr m">SAMR : Modification</span></h4>
+                        <span class="niveau">4e et +</span>
+                        <div class="usage-steps">
+                            <div class="usage-step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">L'enseignant pose une question complexe à 2-3 IA différentes</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">Les élèves comparent les réponses : points communs, différences, erreurs</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">3</span>
+                                <span class="step-content">Ils identifient les biais, les approximations, les « hallucinations »</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">4</span>
+                                <span class="step-content">Ils rédigent une synthèse critique avec sources vérifiées</span>
+                            </div>
+                        </div>
+                        <div class="plusvalue-box">
+                            <h5>✨ Plus-value pédagogique</h5>
+                            <p>Développement de l'esprit critique face aux contenus générés. Compétence essentielle pour les citoyens de demain.</p>
+                        </div>
+                    </div>
+
+                    <div class="usage-box modification">
+                        <h4>📊 Détection des biais <span class="badge-samr m">SAMR : Modification</span></h4>
+                        <span class="niveau">Lycée</span>
+                        <div class="usage-steps">
+                            <div class="usage-step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">Poser la même question à l'IA en variant le contexte</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">Analyser les différences de réponse : stéréotypes, représentations</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">3</span>
+                                <span class="step-content">Relier à la question des données d'entraînement et des biais algorithmiques</span>
+                            </div>
+                        </div>
+                        <div class="plusvalue-box">
+                            <h5>✨ Plus-value pédagogique</h5>
+                            <p>Éducation aux médias et à l'information (EMI) ancrée dans le réel. L'IA devient objet d'étude, pas seulement outil.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tile tile-evaluer">
+            <div class="tile-header" onclick="toggleTile(this)">
+                <div class="title-group">
+                    <span class="icon">⚖️</span>
+                    <span>Évaluer : l'IA comme objet de jugement</span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="tile-content">
+                <div class="tile-content-inner">
+                    <p><strong>Niveau Bloom :</strong> Évaluer — Porter un jugement, argumenter, critiquer.</p>
+
+                    <div class="usage-box modification">
+                        <h4>📝 Évaluer et améliorer une production IA <span class="badge-samr m">SAMR : Modification</span></h4>
+                        <span class="niveau">Lycée</span>
+                        <div class="usage-steps">
+                            <div class="usage-step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">L'IA génère un texte sur un sujet donné</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">L'élève évalue ce texte avec une grille de critères : pertinence, argumentation, sources</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">3</span>
+                                <span class="step-content">Il rédige un avis critique argumenté</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">4</span>
+                                <span class="step-content">Il réécrit le texte en l'améliorant selon ses critiques</span>
+                            </div>
+                        </div>
+                        <div class="plusvalue-box">
+                            <h5>✨ Plus-value pédagogique</h5>
+                            <p>L'élève devient évaluateur avant d'être évalué. Il intériorise les critères de qualité. L'IA produit un « premier jet » à critiquer.</p>
+                        </div>
+                    </div>
+
+                    <div class="usage-box redefinition">
+                        <h4>🎭 Débat contradictoire humain vs IA <span class="badge-samr r">SAMR : Redéfinition</span></h4>
+                        <span class="niveau">Lycée</span>
+                        <div class="usage-steps">
+                            <div class="usage-step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">L'IA défend une thèse sur un sujet controversé</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">Les élèves préparent des contre-arguments</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">3</span>
+                                <span class="step-content">Débat oral : les élèves confrontent leurs arguments à ceux de l'IA</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">4</span>
+                                <span class="step-content">Analyse collective : qu'est-ce qui distingue l'argumentation humaine de l'IA ?</span>
+                            </div>
+                        </div>
+                        <div class="plusvalue-box">
+                            <h5>✨ Plus-value pédagogique</h5>
+                            <p>Activité impossible sans IA : un interlocuteur inépuisable pour s'entraîner à argumenter. Réflexion méta sur la pensée humaine.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tile tile-creer">
+            <div class="tile-header" onclick="toggleTile(this)">
+                <div class="title-group">
+                    <span class="icon">🎨</span>
+                    <span>Créer : l'IA comme assistant créatif (pas auteur !)</span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="tile-content">
+                <div class="tile-content-inner">
+                    <p><strong>Niveau Bloom :</strong> Créer — Produire quelque chose de nouveau, combiner des éléments de façon originale.</p>
+
+                    <div class="warning-box">
+                        <span class="warning-icon">🚨</span>
+                        <p><strong>Rappel du cadre officiel :</strong> « L'utilisation d'une IA générative pour réaliser tout ou partie d'un devoir scolaire, sans autorisation explicite et sans travail personnel d'appropriation, sera considérée comme une fraude. »</p>
+                    </div>
+
+                    <div class="usage-box modification">
+                        <h4>✍️ Co-écriture créative guidée <span class="badge-samr m">SAMR : Modification</span></h4>
+                        <span class="niveau">4e et +</span>
+                        <div class="usage-steps">
+                            <div class="usage-step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">L'élève écrit un premier jet ou ébauche son idée créative</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">L'IA propose 3 suites ou directions possibles (pas une seule !)</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">3</span>
+                                <span class="step-content">L'élève choisit une direction et la réécrit avec son style et son point de vue</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">4</span>
+                                <span class="step-content">Alternance : production humaine / suggestions IA / réécriture humaine</span>
+                            </div>
+                        </div>
+                        <div class="plusvalue-box">
+                            <h5>✨ Plus-value pédagogique</h5>
+                            <p>L'IA désbloque l'angoisse de la page blanche mais l'élève reste auteur. Il choisit, adapte, transforme. Transparence totale sur le processus.</p>
+                        </div>
+                    </div>
+
+                    <div class="usage-box redefinition">
+                        <h4>🌍 Projet multimédia avec public réel <span class="badge-samr r">SAMR : Redéfinition</span></h4>
+                        <span class="niveau">Lycée</span>
+                        <div class="usage-steps">
+                            <div class="usage-step">
+                                <span class="step-number">1</span>
+                                <span class="step-content">Les élèves définissent un projet commun (podcast, vidéo, site web)</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">2</span>
+                                <span class="step-content">L'IA aide à structurer (plan, script) — les élèves valident et modifient</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">3</span>
+                                <span class="step-content">L'IA génère des éléments (visuels, voix) que les élèves assemblent</span>
+                            </div>
+                            <div class="usage-step">
+                                <span class="step-number">4</span>
+                                <span class="step-content">Publication avec mention transparente de l'usage de l'IA</span>
+                            </div>
+                        </div>
+                        <div class="plusvalue-box">
+                            <h5>✨ Plus-value pédagogique</h5>
+                            <p>Production professionnelle impossible sans IA. Compétences transversales : gestion de projet, esprit critique, communication. L'élève est chef d'orchestre, pas exécutant.</p>
+                        </div>
+                    </div>
+
+                    <div class="key-principle">
+                        <div class="principle-icon">🎯</div>
+                        <h3>La règle de transparence</h3>
+                        <p>Tout usage de l'IA dans une production doit être explicitement mentionné.<br>« J'ai utilisé [outil] pour [fonction]. J'ai ensuite [travail personnel]. »</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tile tile-outils">
+            <div class="tile-header" onclick="toggleTile(this)">
+                <div class="title-group">
+                    <span class="icon">🛠️</span>
+                    <span>Outils : sans compte, RGPD-friendly</span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="tile-content">
+                <div class="tile-content-inner">
+                    <p>Conformément au cadre officiel, privilégiez les outils <strong>sans création de compte élève</strong> et respectueux du RGPD. Voici quelques options :</p>
+
+                    <div class="tool-list">
+                        <div class="tool-card">
+                            <h4>🇫🇷 Mistral Le Chat <span class="tool-badge">FR / Sans compte</span></h4>
+                            <p>IA conversationnelle française. Accès direct sans inscription. Modèle souverain.</p>
+                        </div>
+                        <div class="tool-card">
+                            <h4>🇨🇭 Euria.eu <span class="tool-badge">EU / RGPD</span></h4>
+                            <p>IA suisse sans inscription, pensée pour l'éducation. Usage frugal encouragé.</p>
+                        </div>
+                        <div class="tool-card">
+                            <h4>🇪🇺 Lumo (Proton) <span class="tool-badge">EU / Chiffré</span></h4>
+                            <p>Assistant IA européen par Proton. Pas de stockage des conversations, open source.</p>
+                        </div>
+                        <div class="tool-card">
+                            <h4>🏫 Outils P2IA/GAR <span class="tool-badge">Édu Nat</span></h4>
+                            <p>Solutions intégrées dans l'ENT via le GAR. Conformité RGPD garantie par le ministère.</p>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <span class="warning-icon">⚠️</span>
+                        <p><strong>Important :</strong> ChatGPT, Copilot, Gemini et autres IA grand public peuvent être utilisés par l'enseignant pour préparer ses cours, mais <strong>jamais avec création de compte élève</strong>. L'enseignant peut projeter et piloter l'outil devant la classe.</p>
+                    </div>
+
+                    <h3>Modalité recommandée : l'enseignant pilote</h3>
+                    <p>Pour les activités en classe, l'enseignant peut :</p>
+                    <ul class="checklist">
+                        <li>
+                            <span class="check-icon">1️⃣</span>
+                            <div>Projeter l'IA au tableau et la manipuler collectivement avec la classe</div>
+                        </li>
+                        <li>
+                            <span class="check-icon">2️⃣</span>
+                            <div>Utiliser un outil sans compte sur les postes élèves (Mistral, Euria...)</div>
+                        </li>
+                        <li>
+                            <span class="check-icon">3️⃣</span>
+                            <div>Fournir des captures d'écran de réponses IA comme support d'analyse</div>
+                        </li>
+                        <li>
+                            <span class="check-icon">4️⃣</span>
+                            <div>Utiliser les outils intégrés à l'ENT via le GAR quand disponibles</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="tile tile-erreurs">
+            <div class="tile-header" onclick="toggleTile(this)">
+                <div class="title-group">
+                    <span class="icon">🚫</span>
+                    <span>Les erreurs à éviter avec l'IA en classe</span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="tile-content">
+                <div class="tile-content-inner">
+                    <h3>❌ Erreur 1 : L'IA fait le travail cognitif</h3>
+                    <p><span class="highlight highlight-red">« Demande à l'IA d'écrire ta rédaction / de résoudre ton exercice. »</span></p>
+                    <p>→ L'élève n'apprend rien. C'est de la sous-traitance, pas de l'apprentissage.</p>
+
+                    <h3>❌ Erreur 2 : Croire que l'IA dit toujours vrai</h3>
+                    <p><span class="highlight highlight-red">« L'IA m'a dit que... donc c'est vrai. »</span></p>
+                    <p>→ L'IA « hallucine » régulièrement. Elle invente des faits, des citations, des sources. Toujours vérifier.</p>
+
+                    <h3>❌ Erreur 3 : Utiliser l'IA sans objectif pédagogique</h3>
+                    <p><span class="highlight highlight-red">« Aujourd'hui, on va utiliser ChatGPT ! »</span></p>
+                    <p>→ L'outil ne fait pas la pédagogie. Quelle compétence travaille-t-on ? Quelle plus-value ?</p>
+
+                    <h3>❌ Erreur 4 : Créer des comptes élèves sur les IA grand public</h3>
+                    <p><span class="highlight highlight-red">« Créez-vous un compte ChatGPT pour le prochain cours. »</span></p>
+                    <p>→ Violation du cadre officiel. Données personnelles non protégées. Interdit.</p>
+
+                    <h3>❌ Erreur 5 : Utiliser des détecteurs d'IA pour « attraper » les tricheurs</h3>
+                    <p><span class="highlight highlight-red">« Je vais passer vos copies dans un détecteur d'IA. »</span></p>
+                    <p>→ Ces outils sont peu fiables et peuvent accuser à tort. Adaptez plutôt vos évaluations.</p>
+
+                    <div class="key-principle">
+                        <div class="principle-icon">💡</div>
+                        <h3>La bonne question à se poser</h3>
+                        <p>« Est-ce que l'élève travaille PLUS ou MOINS cognitivement avec l'IA ? »<br>Si la réponse est « moins », repensez l'activité.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="source-ref">
+            <strong>📚 Références et sources de la recherche :</strong><br>
+            • Michael Gerlich, <em>AI Tools in Society: Impacts on Cognitive Offloading and the Future of Critical Thinking</em>, Societies/MDPI, 2025.<br>
+            • Enquête GoStudent / Kantar sur l'apprentissage numérique et les usages de l'IA par les jeunes, 2024.<br>
+            • UNESCO, <a href="https://unesdoc.unesco.org/ark:/48223/pf0000389901" target="_blank"><em>Orientations pour l'intelligence artificielle générative dans l'éducation et la recherche</em></a>, 2024.<br>
+            • Cnesco, Projet européen AI4T : <a href="https://www.cnesco.fr/fr/ai4t/" target="_blank"><em>L'intelligence artificielle pour et par les enseignants</em></a>, 2024.<br>
+            • Cadre d'usage de l'IA en éducation, Ministère de l'Éducation nationale, juin 2025.
+        </div>
+
+        <footer>
+            <p class="footer-main">Ressource pédagogique — Formation à l'intégration de l'IA générative en éducation</p>
+            <div class="footer-credit">
+                <span>DRANE PACA</span>
+                <span class="ai-badge">✨ Mis en forme avec une IA générative</span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function toggleTile(header) {
+            const tile = header.parentElement;
+            tile.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
