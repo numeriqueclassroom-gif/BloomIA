@@ -3,30 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IA générative en classe : Bloom + SAMR au service des apprentissages</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <title>IA générative en classe : Bloom + SAMR</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Bloom colors */
-            --bloom-purple: #9B7BB8;
-            --bloom-red: #E85A5A;
-            --bloom-orange: #F5A853;
-            --bloom-yellow: #F7DC6F;
-            --bloom-green: #6ABF69;
-            --bloom-blue: #5DADE2;
-            /* SAMR colors */
-            --samr-substitution: #5DADE2;
-            --samr-augmentation: #58D68D;
-            --samr-modification: #F5B041;
-            --samr-redefinition: #AF7AC5;
-            /* IA specific */
+            --bg-cream: #fdf6e3;
+            --text-dark: #2c3e50;
             --ia-gradient-start: #667eea;
             --ia-gradient-end: #764ba2;
-            /* Common */
-            --bg-cream: #F8F6F1;
-            --text-dark: #2C3E50;
-            --shadow: 0 4px 15px rgba(0,0,0,0.1);
-            --alert-red: #e74c3c;
+            --bloom-memoriser: #3498db;
+            --bloom-comprendre: #27ae60;
+            --bloom-appliquer: #f39c12;
+            --bloom-analyser: #e67e22;
+            --bloom-evaluer: #e74c3c;
+            --bloom-creer: #9b59b6;
+            --samr-substitution: #3498db;
+            --samr-augmentation: #2ecc71;
+            --samr-modification: #f39c12;
+            --samr-redefinition: #e74c3c;
             --success-green: #27ae60;
         }
 
@@ -38,272 +34,268 @@
 
         body {
             font-family: 'Nunito', sans-serif;
-            background: var(--bg-cream);
+            background-color: var(--bg-cream);
             color: var(--text-dark);
             line-height: 1.6;
-            min-height: 100vh;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 2rem 1.5rem 4rem;
+            padding: 2rem;
         }
 
+        /* Header */
         header {
+            background: linear-gradient(135deg, var(--ia-gradient-start), var(--ia-gradient-end));
+            color: white;
+            padding: 3rem 2rem;
             text-align: center;
-            margin-bottom: 2.5rem;
-            padding: 2.5rem 2rem;
-            background: linear-gradient(135deg, #fff 0%, #f0ebe3 100%);
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
         }
 
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 6px;
-            background: linear-gradient(90deg, 
-                var(--ia-gradient-start), var(--ia-gradient-end), 
-                var(--bloom-orange), var(--samr-redefinition));
-        }
-
-        .title-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
+        .title-box {
+            display: inline-block;
             margin-bottom: 1rem;
         }
 
-        .title-ia {
+        .title-line {
+            display: block;
             font-family: 'Quicksand', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 800;
-            padding: 0.3rem 0.8rem;
-            border-radius: 8px;
-            color: white;
-            background: linear-gradient(135deg, var(--ia-gradient-start), var(--ia-gradient-end));
-            animation: popIn 0.5s ease-out backwards;
+            font-weight: 700;
+            padding: 0.5rem 1.5rem;
+            margin: 0.3rem 0;
+            border-radius: 10px;
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .title-line:first-child {
+            background: rgba(255,255,255,0.2);
+            font-size: 2.5rem;
             animation-delay: 0.1s;
         }
 
-        .title-text {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            animation: popIn 0.5s ease-out backwards;
-            animation-delay: 0.2s;
+        .title-line:last-child {
+            background: rgba(255,255,255,0.15);
+            font-size: 2rem;
+            animation-delay: 0.3s;
         }
 
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .subtitle {
-            font-size: 1.1rem;
-            color: #666;
-            font-weight: 500;
-            margin-top: 0.5rem;
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            margin-top: 1rem;
         }
 
-        /* Research Box Styling */
-        .research-box {
-            background: linear-gradient(135deg, #ffffff, #f8f9fa);
-            border-left: 5px solid var(--ia-gradient-end);
-            border-radius: 12px;
-            padding: 1.8rem;
+        /* Research Section */
+        .research-section {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 20px;
             margin-bottom: 2rem;
-            box-shadow: var(--shadow);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        .research-box h2 {
+        .research-section h2 {
             font-family: 'Quicksand', sans-serif;
-            color: var(--text-dark);
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.5rem;
         }
 
-        .research-box p {
-            font-size: 0.95rem;
-            color: #444;
-            margin-bottom: 1rem;
+        .research-intro {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            color: rgba(255,255,255,0.9);
         }
 
-        .stat-grid {
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.2rem;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
             margin-top: 1.5rem;
         }
 
         .stat-card {
-            background: #fff;
+            background: rgba(255,255,255,0.1);
             padding: 1.2rem;
-            border-radius: 10px;
-            border: 1px solid #e1e4e8;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            transition: transform 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .stat-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--bloom-purple);
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffd93d;
+            display: block;
         }
 
-        .stat-value {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--ia-gradient-end);
-            margin-bottom: 0.5rem;
-            line-height: 1;
-        }
-
-        .stat-desc {
+        .stat-label {
             font-size: 0.85rem;
-            color: #444;
-            line-height: 1.4;
-            margin-bottom: 0.8rem;
+            color: rgba(255,255,255,0.8);
+            margin-top: 0.5rem;
         }
 
         .stat-source {
             font-size: 0.7rem;
-            color: #888;
+            color: rgba(255,255,255,0.5);
+            margin-top: 0.5rem;
             font-style: italic;
-            border-top: 1px solid #eee;
-            padding-top: 0.5rem;
-            margin-top: auto;
         }
 
-        /* Cadre réglementaire box */
-        .cadre-box {
-            background: linear-gradient(135deg, #e8f4f8, #fff);
-            border: 2px solid var(--bloom-blue);
-            border-radius: 16px;
-            padding: 1.5rem;
+        /* UNESCO Section */
+        .unesco-section {
+            background: linear-gradient(135deg, #0f3460, #16213e);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
             margin-bottom: 2rem;
         }
 
-        .cadre-box.role-enseignant {
-            background: linear-gradient(135deg, #f4e8f8, #fff);
-            border-color: var(--bloom-purple);
+        .unesco-section h2 {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
         }
 
-        .cadre-box h2 {
-            font-family: 'Quicksand', sans-serif;
-            color: var(--text-dark);
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .unesco-quote {
+            font-style: italic;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid #ffd93d;
+            border-radius: 0 10px 10px 0;
+            margin: 1rem 0;
         }
 
         .cadre-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
+            margin-top: 1.5rem;
         }
 
-        .cadre-item {
-            background: white;
+        .cadre-card {
+            background: rgba(255,255,255,0.1);
             padding: 1rem;
             border-radius: 10px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
-        .cadre-item .cadre-icon {
-            font-size: 1.5rem;
+        .cadre-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cadre-card h4 {
+            font-size: 0.9rem;
             margin-bottom: 0.3rem;
         }
 
-        .cadre-item h3 {
-            font-size: 0.85rem;
+        .cadre-card p {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Principles Grid */
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .principle-card {
+            background: white;
+            padding: 1.2rem;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .principle-card .icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .principle-card h4 {
+            font-size: 0.95rem;
             color: var(--text-dark);
             margin-bottom: 0.3rem;
         }
 
-        .cadre-item p {
-            font-size: 0.8rem;
+        .principle-card p {
+            font-size: 0.85rem;
             color: #666;
-            margin: 0;
         }
 
+        /* Tiles */
         .tile {
+            background: white;
+            border-radius: 15px;
             margin-bottom: 1rem;
-            border-radius: 16px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
             overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .tile:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
         .tile-header {
             padding: 1.2rem 1.5rem;
             cursor: pointer;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            transition: all 0.3s ease;
+            align-items: center;
             color: white;
-            font-weight: 700;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
             font-size: 1.1rem;
+            transition: all 0.3s ease;
         }
 
         .tile-header:hover {
-            filter: brightness(1.05);
+            filter: brightness(1.1);
         }
 
-        .tile-header .icon {
-            font-size: 1.5rem;
-            margin-right: 0.8rem;
-        }
-
-        .tile-header .title-group {
+        .title-group {
             display: flex;
             align-items: center;
-            flex: 1;
+            gap: 0.8rem;
         }
 
-        .tile-header .arrow {
-            font-size: 1.2rem;
+        .title-group .icon {
+            font-size: 1.3rem;
+        }
+
+        .arrow {
             transition: transform 0.3s ease;
+            font-size: 0.9rem;
         }
 
-        .tile.open .tile-header .arrow {
+        .tile.open .arrow {
             transform: rotate(180deg);
         }
 
         .tile-content {
-            background: white;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease;
+            transition: max-height 0.4s ease-out;
         }
 
         .tile.open .tile-content {
-            max-height: 8000px;
+            max-height: 5000px;
         }
 
         .tile-content-inner {
@@ -311,52 +303,61 @@
         }
 
         /* Tile colors */
-        .tile-principe .tile-header { background: linear-gradient(135deg, #2C3E50, #34495e); }
-        .tile-memoriser .tile-header { background: linear-gradient(135deg, var(--bloom-blue), #3498db); }
-        .tile-comprendre .tile-header { background: linear-gradient(135deg, var(--bloom-green), #27ae60); }
-        .tile-appliquer .tile-header { background: linear-gradient(135deg, #c9a227, #d4ac2b); }
-        .tile-analyser .tile-header { background: linear-gradient(135deg, var(--bloom-orange), #e67e22); }
-        .tile-evaluer .tile-header { background: linear-gradient(135deg, var(--bloom-red), #c0392b); }
-        .tile-creer .tile-header { background: linear-gradient(135deg, var(--bloom-purple), #8e44ad); }
-        .tile-outils .tile-header { background: linear-gradient(135deg, var(--ia-gradient-start), var(--ia-gradient-end)); }
-        .tile-erreurs .tile-header { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+        .tile-principe .tile-header { background: linear-gradient(135deg, var(--ia-gradient-start), var(--ia-gradient-end)); }
+        .tile-memoriser .tile-header { background: linear-gradient(135deg, #2980b9, #3498db); }
+        .tile-comprendre .tile-header { background: linear-gradient(135deg, #1e8449, #27ae60); }
+        .tile-appliquer .tile-header { background: linear-gradient(135deg, #d68910, #f39c12); }
+        .tile-analyser .tile-header { background: linear-gradient(135deg, #ca6f1e, #e67e22); }
+        .tile-evaluer .tile-header { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+        .tile-creer .tile-header { background: linear-gradient(135deg, #7d3c98, #9b59b6); }
+        .tile-outils .tile-header { background: linear-gradient(135deg, #1abc9c, #16a085); }
+        .tile-erreurs .tile-header { background: linear-gradient(135deg, #7f8c8d, #95a5a6); }
+        .tile-inegalites .tile-header { background: linear-gradient(135deg, #8e44ad, #9b59b6); }
 
-        h3 {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.15rem;
-            margin-bottom: 1rem;
-            color: var(--text-dark);
+        /* Warning boxes */
+        .warning-box {
+            background: linear-gradient(135deg, #fff3cd, #fff);
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
         }
 
-        p {
-            margin-bottom: 0.8rem;
-            color: #555;
+        .warning-box .warning-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
         }
 
-        .highlight {
-            background: linear-gradient(120deg, #fff3cd 0%, #fff3cd 100%);
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-weight: 600;
+        .warning-box p {
+            margin: 0;
+            font-size: 0.9rem;
         }
 
-        .highlight-green {
-            background: linear-gradient(120deg, #d4edda 0%, #d4edda 100%);
-            color: #155724;
+        /* Alert box (red) */
+        .alert-box {
+            background: linear-gradient(135deg, #f8d7da, #fff);
+            border: 1px solid #e74c3c;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
         }
 
-        .highlight-red {
-            background: linear-gradient(120deg, #f8d7da 0%, #f8d7da 100%);
+        .alert-box p {
+            margin: 0;
+            font-size: 0.9rem;
             color: #721c24;
         }
 
-        /* Usage scenario boxes */
+        /* Usage boxes */
         .usage-box {
             background: linear-gradient(135deg, #f8f9fa, #fff);
             border-radius: 12px;
             padding: 1.5rem;
-            margin: 1rem 0;
-            border-left: 4px solid var(--bloom-purple);
+            margin: 1.5rem 0;
+            border-left: 4px solid #ccc;
         }
 
         .usage-box.substitution { border-left-color: var(--samr-substitution); }
@@ -366,50 +367,58 @@
 
         .usage-box h4 {
             font-family: 'Quicksand', sans-serif;
+            font-size: 1.1rem;
             color: var(--text-dark);
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
             flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
-        .usage-box .niveau {
-            font-size: 0.75rem;
+        .discipline {
+            display: inline-block;
+            background: #e9ecef;
             padding: 0.2rem 0.6rem;
-            background: var(--bloom-blue);
             border-radius: 15px;
-            color: white;
+            font-size: 0.75rem;
+            color: #495057;
+            margin-right: 0.3rem;
         }
 
+        .niveau {
+            display: inline-block;
+            background: #d4edda;
+            padding: 0.2rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            color: #155724;
+        }
+
+        /* Steps */
         .usage-steps {
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
+            margin: 1rem 0;
         }
 
         .usage-step {
             display: flex;
             align-items: flex-start;
             gap: 0.8rem;
-            padding: 0.6rem;
-            border-radius: 8px;
-            background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 0.8rem;
         }
 
         .step-number {
-            flex-shrink: 0;
-            width: 24px;
-            height: 24px;
             background: var(--ia-gradient-start);
             color: white;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.8rem;
             font-weight: 700;
+            flex-shrink: 0;
         }
 
         .step-content {
@@ -445,9 +454,6 @@
             color: #155724;
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
         }
 
         .plusvalue-box p {
@@ -457,82 +463,74 @@
         }
 
         /* Comparison boxes */
-        .comparison-container {
+        .comparison-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1rem;
             margin: 1rem 0;
         }
 
-        @media (max-width: 600px) {
-            .comparison-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .comparison-box {
-            padding: 1rem;
+            padding: 1.2rem;
             border-radius: 12px;
-            border: 2px solid;
         }
 
         .comparison-bad {
-            background: linear-gradient(135deg, #fff8e6, #fff);
-            border-color: var(--bloom-orange);
+            background: linear-gradient(135deg, #ffebee, #fff);
+            border: 2px solid #ffcdd2;
         }
 
         .comparison-good {
-            background: linear-gradient(135deg, #f0fdf4, #fff);
-            border-color: var(--success-green);
+            background: linear-gradient(135deg, #e8f5e9, #fff);
+            border: 2px solid #c8e6c9;
         }
 
         .comparison-box h4 {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
         }
-
-        .comparison-bad h4 { color: #856404; }
-        .comparison-good h4 { color: var(--success-green); }
 
         .comparison-box p {
             font-size: 0.9rem;
-            margin: 0;
+            margin: 0.3rem 0;
         }
 
-        /* Key principle box */
+        .comparison-box em {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Key principle */
         .key-principle {
-            background: linear-gradient(135deg, #2C3E50, #34495e);
+            background: linear-gradient(135deg, var(--ia-gradient-start), var(--ia-gradient-end));
             color: white;
             padding: 1.5rem;
-            border-radius: 12px;
-            text-align: center;
+            border-radius: 15px;
             margin: 1.5rem 0;
+            text-align: center;
         }
 
         .key-principle .principle-icon {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 0.5rem;
         }
 
         .key-principle h3 {
-            color: white;
-            font-size: 1.05rem;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.2rem;
             margin-bottom: 0.5rem;
         }
 
         .key-principle p {
-            color: rgba(255,255,255,0.9);
-            margin: 0;
             font-size: 0.95rem;
+            margin: 0;
+            opacity: 0.95;
         }
 
         /* Tool list */
         .tool-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1rem;
             margin: 1rem 0;
         }
@@ -568,43 +566,104 @@
             margin: 0;
         }
 
-        /* Warning box */
-        .warning-box {
-            background: linear-gradient(135deg, #fff3cd, #fff);
-            border: 1px solid #ffc107;
-            border-radius: 10px;
-            padding: 1rem;
-            margin: 1rem 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.8rem;
+        /* Research boxes for inequalities tile */
+        .research-box {
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid #8e44ad;
         }
 
-        .warning-box .warning-icon {
-            font-size: 1.5rem;
-            flex-shrink: 0;
+        .research-box h4 {
+            font-family: 'Quicksand', sans-serif;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
         }
 
-        .warning-box p {
-            margin: 0;
+        .research-box .research-source {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .research-box .research-list {
+            margin: 0.8rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .research-box .research-list li {
+            margin-bottom: 0.3rem;
             font-size: 0.9rem;
-            color: #856404;
         }
+
+        .research-quote {
+            background: linear-gradient(135deg, #e8daef, #f4ecf7);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #5b2c6f;
+            border-left: 3px solid #8e44ad;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .profile-card {
+            padding: 1rem;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .profile-card h5 {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+        }
+
+        .profile-card .profile-count {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.4rem;
+            background: #e9ecef;
+            border-radius: 10px;
+            color: #495057;
+        }
+
+        .profile-card p {
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .profile-reflexif { border-left: 4px solid #27ae60; }
+        .profile-legaliste { border-left: 4px solid #f39c12; }
+        .profile-opportuniste { border-left: 4px solid #e74c3c; }
 
         /* Checklist */
         .checklist {
             list-style: none;
+            padding: 0;
             margin: 1rem 0;
         }
 
         .checklist li {
-            padding: 0.8rem 1rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #f8f9fa, #fff);
-            border-radius: 8px;
             display: flex;
             align-items: flex-start;
             gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 8px;
         }
 
         .checklist .check-icon {
@@ -612,175 +671,240 @@
             flex-shrink: 0;
         }
 
+        .checklist div {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        /* Modalités list */
+        .modalites-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .modalites-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            margin-bottom: 0.6rem;
+            padding: 0.6rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Transparency rule */
+        .transparency-rule {
+            background: linear-gradient(135deg, #fff3cd, #fff);
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .transparency-rule h3 {
+            color: #856404;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .transparency-rule p {
+            color: #856404;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
         /* Source reference */
         .source-ref {
             background: #f8f9fa;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 2rem;
             font-size: 0.85rem;
-            color: #666;
+            line-height: 1.8;
         }
 
         .source-ref a {
             color: var(--ia-gradient-start);
             text-decoration: none;
-            word-break: break-all;
         }
 
         .source-ref a:hover {
             text-decoration: underline;
         }
 
+        /* Footer */
         footer {
             text-align: center;
             padding: 2rem;
-            margin-top: 1rem;
+            margin-top: 2rem;
+            border-top: 1px solid #e9ecef;
         }
 
         .footer-main {
-            color: #888;
+            color: #666;
             font-size: 0.9rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .footer-credit {
-            display: inline-flex;
+            display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            background: linear-gradient(135deg, #2C3E50, #34495e);
-            color: #fff;
-            border-radius: 25px;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-credit span {
+            color: #888;
             font-size: 0.85rem;
-            font-weight: 600;
         }
 
-        .footer-credit .ai-badge {
+        .ai-badge {
             background: linear-gradient(135deg, var(--ia-gradient-start), var(--ia-gradient-end));
-            padding: 0.2rem 0.5rem;
-            border-radius: 10px;
-            font-size: 0.7rem;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
         }
 
-        @media (max-width: 600px) {
-            .title-ia { font-size: 1.6rem; }
-            .title-text { font-size: 1.3rem; }
+        /* Responsive */
+        @media (max-width: 768px) {
             .container { padding: 1rem; }
-            .tile-header { padding: 1rem; font-size: 1rem; }
-            .tile-content-inner { padding: 1rem; }
+            .title-line:first-child { font-size: 1.8rem; }
+            .title-line:last-child { font-size: 1.4rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .cadre-grid { grid-template-columns: 1fr; }
+            .principles-grid { grid-template-columns: 1fr; }
+            .profile-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="title-wrapper">
-                <span class="title-ia">IA générative</span>
-                <span class="title-text">en classe</span>
-            </div>
-            <p class="subtitle">
-                🎯 Bloom + SAMR pour des usages qui font vraiment apprendre
-            </p>
-        </header>
-
-        <div class="research-box">
-            <h2><span class="icon">🔬</span> Ce que nous dit la recherche : L'urgence d'une éducation à l'IA</h2>
-            <p>L'externalisation des fonctions mentales vers l'IA (le <em>cognitive offloading</em>) menace directement l'apprentissage si elle n'est pas encadrée. En France, <strong>l'usage massif et souvent non régulé par les jeunes (86% des étudiants, 90% des lycéens)</strong> appelle une reprise en main par l'institution scolaire pour éviter une véritable atrophie cognitive.</p>
-            
-            <div class="stat-grid">
-                <div class="stat-card">
-                    <div class="stat-value">90%</div>
-                    <div class="stat-desc">des lycéens (16-18 ans) en France utilisent régulièrement l'IA générative pour s'aider à faire leurs devoirs.</div>
-                    <div class="stat-source">Source : Enquête GoStudent / Kantar, 2024</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">83%</div>
-                    <div class="stat-desc">des étudiants épaulés par l'IA ne parviennent pas à se souvenir d'un texte qu'ils viennent pourtant de co-rédiger (amnésie numérique).</div>
-                    <div class="stat-source">Source : M. Gerlich, Étude Societies, 2025</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">- 32%</div>
-                    <div class="stat-desc">de "charge cognitive pertinente" mobilisée lors de la rédaction assistée par ChatGPT par rapport à une tâche autonome.</div>
-                    <div class="stat-source">Source : M. Gerlich, Étude Societies, 2025</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">- 0,49</div>
-                    <div class="stat-desc">Coefficient de corrélation (Pearson) : lien fort et négatif entre l'usage intensif de l'IA et la capacité à exercer son esprit critique.</div>
-                    <div class="stat-source">Source : M. Gerlich, Étude Societies, 2025</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">Baisse</div>
-                    <div class="stat-desc">La connectivité cérébrale (mesurée par EEG) diminue de manière proportionnelle au niveau d'assistance fourni par l'outil IA.</div>
-                    <div class="stat-source">Source : Étude N. Kosmyna, MIT Media Lab, 2025</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">80%</div>
-                    <div class="stat-desc">des enseignants français déclarent n'avoir reçu aucune formation à l'IA, limitant de fait leur capacité à l'encadrer.</div>
-                    <div class="stat-source">Source : Rapport Cnesco (Projet AI4T), 2024</div>
-                </div>
-            </div>
+    <header>
+        <div class="title-box">
+            <span class="title-line">IA générative</span>
+            <span class="title-line">en classe</span>
         </div>
+        <p>🎯 Bloom + SAMR pour des usages qui font vraiment apprendre</p>
+    </header>
 
-        <div class="cadre-box role-enseignant">
+    <div class="container">
+        <!-- Section Recherche -->
+        <section class="research-section">
+            <h2>🔬 Ce que nous dit la recherche : L'urgence d'une éducation à l'IA</h2>
+            <p class="research-intro">L'externalisation des fonctions mentales vers l'IA (le <em>cognitive offloading</em>) menace directement l'apprentissage si elle n'est pas encadrée. En France, <strong>l'usage massif et souvent non régulé par les jeunes (86% des étudiants, 90% des lycéens)</strong> appelle une reprise en main par l'institution scolaire pour éviter une véritable atrophie cognitive.</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">90%</span>
+                    <p class="stat-label">des lycéens (16-18 ans) en France utilisent régulièrement l'IA générative pour s'aider à faire leurs devoirs.</p>
+                    <p class="stat-source">Source : Enquête GoStudent / Kantar, 2024</p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">83%</span>
+                    <p class="stat-label">des étudiants épaulés par l'IA ne parviennent pas à se souvenir d'un texte qu'ils viennent pourtant de co-rédiger (amnésie numérique).</p>
+                    <p class="stat-source">Source : M. Gerlich, Étude Societies, 2025</p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">- 32%</span>
+                    <p class="stat-label">de "charge cognitive pertinente" mobilisée lors de la rédaction assistée par ChatGPT par rapport à une tâche autonome.</p>
+                    <p class="stat-source">Source : M. Gerlich, Étude Societies, 2025</p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">- 0,49</span>
+                    <p class="stat-label">Coefficient de corrélation (Pearson) : lien fort et négatif entre l'usage intensif de l'IA et la capacité à exercer son esprit critique.</p>
+                    <p class="stat-source">Source : M. Gerlich, Étude Societies, 2025</p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">Baisse</span>
+                    <p class="stat-label">La connectivité cérébrale (mesurée par EEG) diminue de manière proportionnelle au niveau d'assistance fourni par l'outil IA.</p>
+                    <p class="stat-source">Source : Étude N. Kosmyna, MIT Media Lab, 2025</p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">80%</span>
+                    <p class="stat-label">des enseignants français déclarent n'avoir reçu aucune formation à l'IA, limitant de fait leur capacité à l'encadrer.</p>
+                    <p class="stat-source">Source : Rapport Cnesco (Projet AI4T), 2024</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section UNESCO -->
+        <section class="unesco-section">
             <h2>🗣️ Le rôle crucial de l'enseignant : Cadrer et annoncer l'usage</h2>
-            <p style="margin-bottom: 1rem;">Face à ces enjeux, l'UNESCO a publié ses <em>Orientations pour l'intelligence artificielle générative dans l'éducation et la recherche</em> (2024), rappelant qu'il faut <strong>« garantir que l'IA générative serve avant tout à renforcer les capacités humaines plutôt qu'à s'y substituer »</strong>. De même, le projet d'évaluation européen AI4T, piloté par le Cnesco auprès de 1 005 enseignants, recommande d'<strong>« offrir des opportunités de formation à l'IA aux enseignants »</strong> et de <strong>« garantir un cadre éthique »</strong>.</p>
-            <p style="margin-bottom: 1rem;">L'élève ne peut pas deviner seul ce qui est permis. <strong>C'est à l'enseignant de définir et d'annoncer explicitement le cadre avant chaque activité :</strong></p>
+            <p>Face à ces enjeux, l'UNESCO a publié ses <em>Orientations pour l'intelligence artificielle générative dans l'éducation et la recherche</em> (2024), rappelant qu'il faut <strong>« garantir que l'IA générative serve avant tout à renforcer les capacités humaines plutôt qu'à s'y substituer »</strong>.</p>
+            
+            <p style="margin-top: 1rem;">L'élève ne peut pas deviner seul ce qui est permis. <strong>C'est à l'enseignant de définir et d'annoncer explicitement le cadre avant chaque activité :</strong></p>
+
             <div class="cadre-grid">
-                <div class="cadre-item">
-                    <div class="cadre-icon">🚫</div>
-                    <h3>1. Interdiction</h3>
+                <div class="cadre-card">
+                    <div class="icon">🚫</div>
+                    <h4>1. Interdiction</h4>
                     <p><strong>"On ne peut pas utiliser l'IA ici."</strong> Évaluation, réflexion initiale, ancrage mémoriel. L'effort doit être 100% humain.</p>
                 </div>
-                <div class="cadre-item">
-                    <div class="cadre-icon">🤝</div>
-                    <h3>2. Assistance</h3>
+                <div class="cadre-card">
+                    <div class="icon">🤝</div>
+                    <h4>2. Assistance</h4>
                     <p><strong>"On peut être assisté."</strong> L'IA aide à comprendre un concept, reformuler une consigne ou joue le rôle de tuteur socratique.</p>
                 </div>
-                <div class="cadre-item">
-                    <div class="cadre-icon">🏗️</div>
-                    <h3>3. Génération & Critique</h3>
+                <div class="cadre-card">
+                    <div class="icon">🏗️</div>
+                    <h4>3. Génération & Critique</h4>
                     <p><strong>"On peut générer."</strong> L'IA produit un premier jet que l'élève a pour obligation d'analyser, de corriger et de s'approprier.</p>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="cadre-box">
-            <h2>📋 Rappel sur les PRINCIPES FORTS du cadre d'usage</h2>
-            <div class="cadre-grid">
-                <div class="cadre-item">
-                    <div class="cadre-icon">🔒</div>
-                    <h3>Pas de compte élève</h3>
+        <!-- Principes du cadre -->
+        <h2 style="margin: 2rem 0 1rem; font-family: 'Quicksand', sans-serif;">📋 Rappel sur les PRINCIPES FORTS du cadre d'usage</h2>
+        <div class="principles-grid">
+            <div class="principle-card">
+                <span class="icon">🔒</span>
+                <div>
+                    <h4>Pas de compte élève</h4>
                     <p>Interdiction de demander aux élèves de créer un compte sur des IA grand public</p>
                 </div>
-                <div class="cadre-item">
-                    <div class="cadre-icon">📊</div>
-                    <h3>Pas de données personnelles</h3>
+            </div>
+            <div class="principle-card">
+                <span class="icon">📊</span>
+                <div>
+                    <h4>Pas de données personnelles</h4>
                     <p>Ne saisir que des données pouvant être rendues publiques</p>
                 </div>
-                <div class="cadre-item">
-                    <div class="cadre-icon">🎓</div>
-                    <h3>À partir de la 4e</h3>
+            </div>
+            <div class="principle-card">
+                <span class="icon">🎓</span>
+                <div>
+                    <h4>À partir de la 4e</h4>
                     <p>Usage autonome encadré au collège, plus libre au lycée</p>
                 </div>
-                <div class="cadre-item">
-                    <div class="cadre-icon">🌱</div>
-                    <h3>Usage frugal</h3>
+            </div>
+            <div class="principle-card">
+                <span class="icon">🌱</span>
+                <div>
+                    <h4>Usage frugal</h4>
                     <p>Privilégier les solutions moins coûteuses écologiquement</p>
                 </div>
-                <div class="cadre-item">
-                    <div class="cadre-icon">👁️</div>
-                    <h3>Validation humaine</h3>
+            </div>
+            <div class="principle-card">
+                <span class="icon">👁️</span>
+                <div>
+                    <h4>Validation humaine</h4>
                     <p>L'exactitude des contenus générés doit systématiquement être vérifiée par l'élève</p>
                 </div>
-                <div class="cadre-item">
-                    <div class="cadre-icon">📢</div>
-                    <h3>Transparence totale</h3>
+            </div>
+            <div class="principle-card">
+                <span class="icon">📢</span>
+                <div>
+                    <h4>Transparence totale</h4>
                     <p>Tout usage de l'IA pour un rendu doit être explicitement déclaré et justifié</p>
                 </div>
             </div>
         </div>
 
+        <!-- Tuile 1: Principe -->
         <div class="tile tile-principe open">
             <div class="tile-header" onclick="toggleTile(this)">
                 <div class="title-group">
@@ -793,18 +917,20 @@
                 <div class="tile-content-inner">
                     <p>Comme pour tout outil numérique, l'IA générative n'a de sens pédagogique que si elle apporte une <strong>plus-value à l'apprentissage</strong>. Mais l'IA pose un défi particulier : elle peut <strong>court-circuiter l'effort cognitif</strong> de l'élève si elle est mal utilisée.</p>
 
-                    <div class="key-principle">
-                        <div class="principle-icon">⚠️</div>
-                        <h3>Le piège de l'IA : faire À LA PLACE de l'élève</h3>
-                        <p>Si l'IA fait le travail cognitif, l'élève n'apprend pas.<br>L'IA doit être un <strong>outil de l'élève</strong>, pas un <strong>substitut à son effort</strong>.</p>
+                    <div class="warning-box">
+                        <span class="warning-icon">⚠️</span>
+                        <div>
+                            <h4>Le piège de l'IA : faire À LA PLACE de l'élève</h4>
+                            <p>Si l'IA fait le travail cognitif, l'élève n'apprend pas.<br>L'IA doit être un <strong>outil de l'élève</strong>, pas un <strong>substitut à son effort</strong>.</p>
+                        </div>
                     </div>
 
-                    <h3>La règle d'or : croiser Bloom et SAMR</h3>
+                    <h3 style="margin: 1.5rem 0 1rem;">La règle d'or : croiser Bloom et SAMR</h3>
                     <p><strong>Question 1 (Bloom) :</strong> Quelle habileté cognitive je veux que l'élève développe ?</p>
                     <p><strong>Question 2 (SAMR) :</strong> L'IA améliore-t-elle ou transforme-t-elle cette tâche cognitive ?</p>
                     <p><strong>Question 3 (Plus-value) :</strong> Est-ce que l'élève travaille PLUS ou MOINS cognitivement avec l'IA ?</p>
 
-                    <div class="comparison-container">
+                    <div class="comparison-grid">
                         <div class="comparison-box comparison-bad">
                             <h4>⚡ Réflexe habituel</h4>
                             <p>« Demande à ChatGPT de t'écrire une introduction sur le sujet. »</p>
@@ -820,6 +946,7 @@
             </div>
         </div>
 
+        <!-- Tuile 2: Mémoriser -->
         <div class="tile tile-memoriser">
             <div class="tile-header" onclick="toggleTile(this)">
                 <div class="title-group">
@@ -839,7 +966,7 @@
 
                     <div class="usage-box augmentation">
                         <h4>📚 Créer ses propres flashcards <span class="badge-samr a">SAMR : Augmentation</span></h4>
-                        <span class="niveau">Collège / Lycée</span>
+                        <span class="discipline">Toutes disciplines</span> <span class="niveau">Collège / Lycée</span>
                         <div class="usage-steps">
                             <div class="usage-step">
                                 <span class="step-number">1</span>
@@ -866,7 +993,7 @@
 
                     <div class="usage-box augmentation">
                         <h4>🎯 Quiz personnalisé adaptatif <span class="badge-samr a">SAMR : Augmentation</span></h4>
-                        <span class="niveau">4e et +</span>
+                        <span class="discipline">Langues / Sciences</span> <span class="niveau">4e et +</span>
                         <div class="usage-steps">
                             <div class="usage-step">
                                 <span class="step-number">1</span>
@@ -890,6 +1017,7 @@
             </div>
         </div>
 
+        <!-- Tuile 3: Comprendre -->
         <div class="tile tile-comprendre">
             <div class="tile-header" onclick="toggleTile(this)">
                 <div class="title-group">
@@ -901,7 +1029,7 @@
             <div class="tile-content">
                 <div class="tile-content-inner">
                     <p><strong>Niveau Bloom :</strong> Comprendre — Expliquer des idées, interpréter, résumer.</p>
-
+                    
                     <div class="warning-box">
                         <span class="warning-icon">⚠️</span>
                         <p><strong>Attention :</strong> L'IA peut « halluciner » (inventer des informations fausses). Toujours croiser avec des sources fiables.</p>
@@ -909,7 +1037,7 @@
 
                     <div class="usage-box augmentation">
                         <h4>🔄 Reformulation adaptée <span class="badge-samr a">SAMR : Augmentation</span></h4>
-                        <span class="niveau">Collège / Lycée</span>
+                        <span class="discipline">Toutes disciplines</span> <span class="niveau">Collège / Lycée</span>
                         <div class="usage-steps">
                             <div class="usage-step">
                                 <span class="step-number">1</span>
@@ -932,7 +1060,7 @@
 
                     <div class="usage-box modification">
                         <h4>❓ Dialogue socratique <span class="badge-samr m">SAMR : Modification</span></h4>
-                        <span class="niveau">Lycée</span>
+                        <span class="discipline">Philosophie / Lettres / HLP</span> <span class="niveau">Lycée</span>
                         <div class="usage-steps">
                             <div class="usage-step">
                                 <span class="step-number">1</span>
@@ -956,6 +1084,7 @@
             </div>
         </div>
 
+        <!-- Tuile 4: Appliquer -->
         <div class="tile tile-appliquer">
             <div class="tile-header" onclick="toggleTile(this)">
                 <div class="title-group">
@@ -970,7 +1099,7 @@
 
                     <div class="usage-box augmentation">
                         <h4>📝 Exercices à la demande avec correction <span class="badge-samr a">SAMR : Augmentation</span></h4>
-                        <span class="niveau">4e et +</span>
+                        <span class="discipline">Maths / Sciences / Langues</span> <span class="niveau">4e et +</span>
                         <div class="usage-steps">
                             <div class="usage-step">
                                 <span class="step-number">1</span>
@@ -997,7 +1126,7 @@
 
                     <div class="usage-box modification">
                         <h4>💬 Simulation de scénario <span class="badge-samr m">SAMR : Modification</span></h4>
-                        <span class="niveau">4e et +</span>
+                        <span class="discipline">Langues / Économie / Pro</span> <span class="niveau">4e et +</span>
                         <div class="usage-steps">
                             <div class="usage-step">
                                 <span class="step-number">1</span>
@@ -1021,6 +1150,7 @@
             </div>
         </div>
 
+        <!-- Tuile 5: Analyser -->
         <div class="tile tile-analyser">
             <div class="tile-header" onclick="toggleTile(this)">
                 <div class="title-group">
@@ -1035,7 +1165,7 @@
 
                     <div class="usage-box modification">
                         <h4>🔬 Analyse comparative des réponses IA <span class="badge-samr m">SAMR : Modification</span></h4>
-                        <span class="niveau">4e et +</span>
+                        <span class="discipline">EMC / EMI / Lettres</span> <span class="niveau">4e et +</span>
                         <div class="usage-steps">
                             <div class="usage-step">
                                 <span class="step-number">1</span>
@@ -1062,7 +1192,7 @@
 
                     <div class="usage-box modification">
                         <h4>📊 Détection des biais <span class="badge-samr m">SAMR : Modification</span></h4>
-                        <span class="niveau">Lycée</span>
+                        <span class="discipline">EMI / SES / Philosophie</span> <span class="niveau">Lycée</span>
                         <div class="usage-steps">
                             <div class="usage-step">
                                 <span class="step-number">1</span>
@@ -1086,6 +1216,7 @@
             </div>
         </div>
 
+        <!-- Tuile 6: Évaluer -->
         <div class="tile tile-evaluer">
             <div class="tile-header" onclick="toggleTile(this)">
                 <div class="title-group">
@@ -1100,7 +1231,7 @@
 
                     <div class="usage-box modification">
                         <h4>📝 Évaluer et améliorer une production IA <span class="badge-samr m">SAMR : Modification</span></h4>
-                        <span class="niveau">Lycée</span>
+                        <span class="discipline">Toutes disciplines</span> <span class="niveau">Lycée</span>
                         <div class="usage-steps">
                             <div class="usage-step">
                                 <span class="step-number">1</span>
@@ -1127,7 +1258,7 @@
 
                     <div class="usage-box redefinition">
                         <h4>🎭 Débat contradictoire humain vs IA <span class="badge-samr r">SAMR : Redéfinition</span></h4>
-                        <span class="niveau">Lycée</span>
+                        <span class="discipline">EMC / Philosophie / HGGSP</span> <span class="niveau">Lycée</span>
                         <div class="usage-steps">
                             <div class="usage-step">
                                 <span class="step-number">1</span>
@@ -1155,6 +1286,7 @@
             </div>
         </div>
 
+        <!-- Tuile 7: Créer -->
         <div class="tile tile-creer">
             <div class="tile-header" onclick="toggleTile(this)">
                 <div class="title-group">
@@ -1167,14 +1299,13 @@
                 <div class="tile-content-inner">
                     <p><strong>Niveau Bloom :</strong> Créer — Produire quelque chose de nouveau, combiner des éléments de façon originale.</p>
 
-                    <div class="warning-box">
-                        <span class="warning-icon">🚨</span>
-                        <p><strong>Rappel du cadre officiel :</strong> « L'utilisation d'une IA générative pour réaliser tout ou partie d'un devoir scolaire, sans autorisation explicite et sans travail personnel d'appropriation, sera considérée comme une fraude. »</p>
+                    <div class="alert-box">
+                        <p>🚨 <strong>Rappel du cadre officiel :</strong> « L'utilisation d'une IA générative pour réaliser tout ou partie d'un devoir scolaire, sans autorisation explicite et sans travail personnel d'appropriation, sera considérée comme une fraude. »</p>
                     </div>
 
                     <div class="usage-box modification">
                         <h4>✍️ Co-écriture créative guidée <span class="badge-samr m">SAMR : Modification</span></h4>
-                        <span class="niveau">4e et +</span>
+                        <span class="discipline">Lettres / Langues</span> <span class="niveau">4e et +</span>
                         <div class="usage-steps">
                             <div class="usage-step">
                                 <span class="step-number">1</span>
@@ -1201,7 +1332,7 @@
 
                     <div class="usage-box redefinition">
                         <h4>🌍 Projet multimédia avec public réel <span class="badge-samr r">SAMR : Redéfinition</span></h4>
-                        <span class="niveau">Lycée</span>
+                        <span class="discipline">Transversal</span> <span class="niveau">Lycée</span>
                         <div class="usage-steps">
                             <div class="usage-step">
                                 <span class="step-number">1</span>
@@ -1226,15 +1357,15 @@
                         </div>
                     </div>
 
-                    <div class="key-principle">
-                        <div class="principle-icon">🎯</div>
-                        <h3>La règle de transparence</h3>
+                    <div class="transparency-rule">
+                        <h3>🎯 La règle de transparence</h3>
                         <p>Tout usage de l'IA dans une production doit être explicitement mentionné.<br>« J'ai utilisé [outil] pour [fonction]. J'ai ensuite [travail personnel]. »</p>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Tuile 8: Outils -->
         <div class="tile tile-outils">
             <div class="tile-header" onclick="toggleTile(this)">
                 <div class="title-group">
@@ -1271,30 +1402,19 @@
                         <p><strong>Important :</strong> ChatGPT, Copilot, Gemini et autres IA grand public peuvent être utilisés par l'enseignant pour préparer ses cours, mais <strong>jamais avec création de compte élève</strong>. L'enseignant peut projeter et piloter l'outil devant la classe.</p>
                     </div>
 
-                    <h3>Modalité recommandée : l'enseignant pilote</h3>
+                    <h3 style="margin: 1.5rem 0 1rem;">Modalité recommandée : l'enseignant pilote</h3>
                     <p>Pour les activités en classe, l'enseignant peut :</p>
-                    <ul class="checklist">
-                        <li>
-                            <span class="check-icon">1️⃣</span>
-                            <div>Projeter l'IA au tableau et la manipuler collectivement avec la classe</div>
-                        </li>
-                        <li>
-                            <span class="check-icon">2️⃣</span>
-                            <div>Utiliser un outil sans compte sur les postes élèves (Mistral, Euria...)</div>
-                        </li>
-                        <li>
-                            <span class="check-icon">3️⃣</span>
-                            <div>Fournir des captures d'écran de réponses IA comme support d'analyse</div>
-                        </li>
-                        <li>
-                            <span class="check-icon">4️⃣</span>
-                            <div>Utiliser les outils intégrés à l'ENT via le GAR quand disponibles</div>
-                        </li>
+                    <ul class="modalites-list">
+                        <li><span>1️⃣</span> Projeter l'IA au tableau et la manipuler collectivement avec la classe</li>
+                        <li><span>2️⃣</span> Utiliser un outil sans compte sur les postes élèves (Mistral, Euria...)</li>
+                        <li><span>3️⃣</span> Fournir des captures d'écran de réponses IA comme support d'analyse</li>
+                        <li><span>4️⃣</span> Utiliser les outils intégrés à l'ENT via le GAR quand disponibles</li>
                     </ul>
                 </div>
             </div>
         </div>
 
+        <!-- Tuile 9: Les erreurs à éviter -->
         <div class="tile tile-erreurs">
             <div class="tile-header" onclick="toggleTile(this)">
                 <div class="title-group">
@@ -1306,23 +1426,23 @@
             <div class="tile-content">
                 <div class="tile-content-inner">
                     <h3>❌ Erreur 1 : L'IA fait le travail cognitif</h3>
-                    <p><span class="highlight highlight-red">« Demande à l'IA d'écrire ta rédaction / de résoudre ton exercice. »</span></p>
+                    <p><span style="background: #ffebee; padding: 0.2rem 0.5rem; border-radius: 5px;">« Demande à l'IA d'écrire ta rédaction / de résoudre ton exercice. »</span></p>
                     <p>→ L'élève n'apprend rien. C'est de la sous-traitance, pas de l'apprentissage.</p>
 
-                    <h3>❌ Erreur 2 : Croire que l'IA dit toujours vrai</h3>
-                    <p><span class="highlight highlight-red">« L'IA m'a dit que... donc c'est vrai. »</span></p>
+                    <h3 style="margin-top: 1.5rem;">❌ Erreur 2 : Croire que l'IA dit toujours vrai</h3>
+                    <p><span style="background: #ffebee; padding: 0.2rem 0.5rem; border-radius: 5px;">« L'IA m'a dit que... donc c'est vrai. »</span></p>
                     <p>→ L'IA « hallucine » régulièrement. Elle invente des faits, des citations, des sources. Toujours vérifier.</p>
 
-                    <h3>❌ Erreur 3 : Utiliser l'IA sans objectif pédagogique</h3>
-                    <p><span class="highlight highlight-red">« Aujourd'hui, on va utiliser ChatGPT ! »</span></p>
+                    <h3 style="margin-top: 1.5rem;">❌ Erreur 3 : Utiliser l'IA sans objectif pédagogique</h3>
+                    <p><span style="background: #ffebee; padding: 0.2rem 0.5rem; border-radius: 5px;">« Aujourd'hui, on va utiliser ChatGPT ! »</span></p>
                     <p>→ L'outil ne fait pas la pédagogie. Quelle compétence travaille-t-on ? Quelle plus-value ?</p>
 
-                    <h3>❌ Erreur 4 : Créer des comptes élèves sur les IA grand public</h3>
-                    <p><span class="highlight highlight-red">« Créez-vous un compte ChatGPT pour le prochain cours. »</span></p>
+                    <h3 style="margin-top: 1.5rem;">❌ Erreur 4 : Créer des comptes élèves sur les IA grand public</h3>
+                    <p><span style="background: #ffebee; padding: 0.2rem 0.5rem; border-radius: 5px;">« Créez-vous un compte ChatGPT pour le prochain cours. »</span></p>
                     <p>→ Violation du cadre officiel. Données personnelles non protégées. Interdit.</p>
 
-                    <h3>❌ Erreur 5 : Utiliser des détecteurs d'IA pour « attraper » les tricheurs</h3>
-                    <p><span class="highlight highlight-red">« Je vais passer vos copies dans un détecteur d'IA. »</span></p>
+                    <h3 style="margin-top: 1.5rem;">❌ Erreur 5 : Utiliser des détecteurs d'IA pour « attraper » les tricheurs</h3>
+                    <p><span style="background: #ffebee; padding: 0.2rem 0.5rem; border-radius: 5px;">« Je vais passer vos copies dans un détecteur d'IA. »</span></p>
                     <p>→ Ces outils sont peu fiables et peuvent accuser à tort. Adaptez plutôt vos évaluations.</p>
 
                     <div class="key-principle">
@@ -1334,13 +1454,108 @@
             </div>
         </div>
 
+        <!-- NOUVELLE TUILE 10: Inégalités et asymétrie des savoirs -->
+        <div class="tile tile-inegalites">
+            <div class="tile-header" onclick="toggleTile(this)">
+                <div class="title-group">
+                    <span class="icon">⚖️</span>
+                    <span>Attention : l'IA peut creuser les inégalités</span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="tile-content">
+                <div class="tile-content-inner">
+                    <p>Deux recherches récentes alertent sur un phénomène contre-intuitif : <strong>l'IA ne « nivelle pas le terrain »</strong>, elle peut au contraire <strong>amplifier les inégalités existantes</strong> entre élèves.</p>
+
+                    <div class="research-box">
+                        <h4>🔬 Le problème de l'asymétrie des savoirs</h4>
+                        <p class="research-source">Dr Nick Potkalitsky, <em>The Knowledge Asymmetry Problem: Why Student Expertise Matters in AI Collaboration</em> (2025)</p>
+                        <p>L'élève qui maîtrise déjà un domaine peut :</p>
+                        <ul class="research-list">
+                            <li>Formuler des questions précises basées sur ce qu'il ne comprend pas</li>
+                            <li>Repérer quand l'IA se trompe ou omet des éléments importants</li>
+                            <li>Utiliser les réponses comme point de départ pour approfondir</li>
+                        </ul>
+                        <p>L'élève qui ne maîtrise pas le domaine :</p>
+                        <ul class="research-list">
+                            <li>Ne sait pas quelles questions poser → l'IA dirige l'interaction</li>
+                            <li>Ne peut pas évaluer la qualité des réponses</li>
+                            <li>Accepte les réponses comme vérité absolue</li>
+                        </ul>
+                        <div class="research-quote">
+                            « L'IA ne réduit pas l'asymétrie, elle la renforce. L'élève B a l'impression d'avoir une conversation productive, mais c'est l'IA qui détermine quelles questions valent la peine d'être posées, comment le sujet doit être cadré. »
+                        </div>
+                    </div>
+
+                    <div class="research-box">
+                        <h4>🔬 Trois profils d'élèves face à l'IAG</h4>
+                        <p class="research-source">Cédric Naudet, <em>L'usage de l'intelligence artificielle générative au lycée : un révélateur des inégalités socio-scolaires ?</em> (2025) — Étude sur 664 lycéens en banlieue parisienne</p>
+                        
+                        <div class="profile-grid">
+                            <div class="profile-card profile-reflexif">
+                                <h5>🟢 Engagés réflexifs <span class="profile-count">11/26</span></h5>
+                                <p>Dialoguent avec l'IA comme un compagnon pédagogique. Vérifient, reformulent, gardent une distance critique. Utilisent l'IAG comme <strong>levier d'apprentissage</strong>.</p>
+                            </div>
+                            <div class="profile-card profile-legaliste">
+                                <h5>🟡 Occasionnels légalistes <span class="profile-count">8/26</span></h5>
+                                <p>Utilisent l'IA avec réticence, par peur de « tricher ». Usage limité aux tâches simples. Prudents mais ne tirent pas pleinement parti de l'outil.</p>
+                            </div>
+                            <div class="profile-card profile-opportuniste">
+                                <h5>🔴 Scolaires opportunistes <span class="profile-count">7/26</span></h5>
+                                <p>Copient-collent sans vérifier ni relire. L'IA fait le travail à leur place. <strong>Aucune distance critique</strong>, dépendance passive.</p>
+                            </div>
+                        </div>
+
+                        <div class="research-quote">
+                            « Ces différences traduisent des rapports inégaux à l'école, aux normes implicites du travail scolaire, et aux outils numériques. L'IAG amplifie les malentendus socio-scolaires. »
+                        </div>
+                    </div>
+
+                    <div class="key-principle" style="background: linear-gradient(135deg, #c0392b, #e74c3c);">
+                        <div class="principle-icon">⚠️</div>
+                        <h3>Conséquence pédagogique majeure</h3>
+                        <p>La « literacy IA » générique (prompting, fonctionnement de l'IA) ne suffit pas.<br>
+                        <strong>Les savoirs disciplinaires restent le prérequis</strong> pour utiliser l'IA efficacement.<br>
+                        Sans connaissances de base, l'élève ne peut pas évaluer ce que l'IA lui propose.</p>
+                    </div>
+
+                    <h3>💡 Ce que cela implique pour l'enseignant</h3>
+                    <ul class="checklist">
+                        <li>
+                            <span class="check-icon">1️⃣</span>
+                            <div><strong>Ne pas abandonner l'enseignement des fondamentaux</strong> sous prétexte que « l'IA peut répondre ». Sans base disciplinaire solide, l'élève est dépendant de l'IA.</div>
+                        </li>
+                        <li>
+                            <span class="check-icon">2️⃣</span>
+                            <div><strong>Expliciter les normes implicites</strong> du travail scolaire. Les élèves des milieux favorisés les connaissent souvent déjà ; les autres doivent les apprendre à l'école.</div>
+                        </li>
+                        <li>
+                            <span class="check-icon">3️⃣</span>
+                            <div><strong>Accompagner spécifiquement les élèves fragiles</strong> dans l'usage de l'IA. Ils risquent d'être les plus dépendants et les moins critiques.</div>
+                        </li>
+                        <li>
+                            <span class="check-icon">4️⃣</span>
+                            <div><strong>Enseigner l'évaluation critique</strong> des réponses IA : vérification des sources, reformulation dans ses propres mots, identification des biais.</div>
+                        </li>
+                        <li>
+                            <span class="check-icon">5️⃣</span>
+                            <div><strong>Encadrer l'usage en classe</strong> plutôt que de le laisser se développer en marge, via les pairs et l'autoformation.</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Source -->
         <div class="source-ref">
             <strong>📚 Références et sources de la recherche :</strong><br>
             • Michael Gerlich, <em>AI Tools in Society: Impacts on Cognitive Offloading and the Future of Critical Thinking</em>, Societies/MDPI, 2025.<br>
             • Enquête GoStudent / Kantar sur l'apprentissage numérique et les usages de l'IA par les jeunes, 2024.<br>
             • UNESCO, <a href="https://unesdoc.unesco.org/ark:/48223/pf0000389901" target="_blank"><em>Orientations pour l'intelligence artificielle générative dans l'éducation et la recherche</em></a>, 2024.<br>
             • Cnesco, Projet européen AI4T : <a href="https://www.cnesco.fr/fr/ai4t/" target="_blank"><em>L'intelligence artificielle pour et par les enseignants</em></a>, 2024.<br>
-            • Cadre d'usage de l'IA en éducation, Ministère de l'Éducation nationale, juin 2025.
+            • Cadre d'usage de l'IA en éducation, Ministère de l'Éducation nationale, juin 2025.<br>
+            • Potkalitsky, N. (2025). <em>The Knowledge Asymmetry Problem: Why Student Expertise Matters in AI Collaboration</em><br>
+            • Naudet, C. (2025). <em>L'usage de l'intelligence artificielle générative au lycée : un révélateur des inégalités socio-scolaires ?</em>, Distances et Médiations des Savoirs
         </div>
 
         <footer>
